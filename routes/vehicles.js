@@ -53,8 +53,6 @@ router.head('/:id', (request, response) => {
 router.get('/:id', (request, response, next) => {
   const id = request.params.id;
   const idIsNumber = !isNaN(parseInt(id, 10));
-  console.log('GET');
-
 
   if (idIsNumber) {
     Vehicle.findOne({id}, (err, vehicle) => {
@@ -62,7 +60,8 @@ router.get('/:id', (request, response, next) => {
       response.json(vehicle);
     });
   } else {
-    Vehicle.find({make: id}, (err, vehicles) => {
+    const make = properCase(id);
+    Vehicle.find({make}, (err, vehicles) => {
       if (err) return console.error(err);
       response.json(vehicles);
     }).limit(PAGE_COUNT);
