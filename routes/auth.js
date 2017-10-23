@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passportTwitter = require('../auth/twitter');
 const passportGitHub = require('../auth/github');
-const TwitterUrl = process.env.TWITTER_URL || 'http://127.0.0.1:3000/auth/twitter';
+const TwitterUrl = require('../constants/constants').TWITTER_URL;
 
 
 router.get('/login', function (req, res, next) {

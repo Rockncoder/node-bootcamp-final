@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Vehicle = require('../models/Vehicles');
-const PAGE_COUNT = 10;
-const DESCENDING = -1;
-const ASCENDING = 1;
+const constants = require('../constants/constants');
 
 function properCase(initial) {
   const [first, ...rest] = Array.from(initial.toLowerCase());
@@ -17,7 +15,7 @@ router.get('/:make/:model', (request, response) => {
   Vehicle.find({make, model}, (err, vehicles) => {
     if (err) return console.error(err);
     response.json(vehicles);
-  }).sort({year: DESCENDING}).limit(PAGE_COUNT);
+  }).sort({year: constants.DESCENDING}).limit(PAGE_COUNT);
 });
 
 
@@ -64,7 +62,7 @@ router.get('/:id', (request, response, next) => {
     Vehicle.find({make}, (err, vehicles) => {
       if (err) return console.error(err);
       response.json(vehicles);
-    }).limit(PAGE_COUNT);
+    }).limit(constants.PAGE_COUNT);
   }
 });
 
@@ -73,7 +71,7 @@ router.get('/', (request, response, next) => {
   Vehicle.find({}, (err, vehicle) => {
     if (err) return console.error(err);
     response.json(vehicle);
-  }).limit(PAGE_COUNT);
+  }).limit(constants.PAGE_COUNT);
 });
 
 router.head('/', (request, response, next) => {
