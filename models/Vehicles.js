@@ -10,7 +10,6 @@ const VehicleSchema = new mongoose.Schema({
   id: Number,
   highway: Number,
   combined: Number,
-  updated_at: { type: Date, default: Date.now },
 });
 
 VehicleSchema.plugin(findOrCreate);
