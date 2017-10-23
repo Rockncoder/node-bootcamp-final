@@ -15,7 +15,7 @@ router.get('/:make/:model', (request, response) => {
   Vehicle.find({make, model}, (err, vehicles) => {
     if (err) return console.error(err);
     response.json(vehicles);
-  }).sort({year: constants.DESCENDING}).limit(PAGE_COUNT);
+  }).sort({year: constants.DESCENDING}).limit(constants.PAGE_COUNT);
 });
 
 
