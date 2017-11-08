@@ -21,3 +21,8 @@ This is a terminal command and should be executed in assets directory.
 1. `<username>` this is the database user name, not you mLab account user name
 1. `<password>` this is the password for the database user
 1. 
+
+To import the data use the following:
+```
+mongoimport -h dsXXXXXX.mlab.com:YYYYY -d vehicles -c vehicle -u admin --file vehicles-1997.csv --type csv --columnsHaveTypes --fields "barrels08.double(),city08.double(),comb08.double(),cylinders.int32(),displ.double(),drive.string(),engId.int32(),eng_dscr.string(),fuelCost08.double(),fuelType.string(),highway08.double(),id.int32(),make.string(),model.string(),mpgData.string(),trany.string(),UCity.double(),UHighway.double(),VClass.string(),year.int32(),youSaveSpend.double(),guzzler.string(),trans_dscr.string(),createdOn.string(),modifiedOn.string()" --parseGrace skipField
+```
