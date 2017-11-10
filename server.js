@@ -1,49 +1,59 @@
-const express = require('express');
-const path = require('path');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+const socketio = require('socket.io');
+const restify = require('restify');
+const server = restify.createServer();
+const PORT = 8080;
+const fs = require('fs');
 
-const vehicles = require('./routes/vehicles');
-const users = require('./routes/users');
+// respond = (req, res, next ) => {
+//   res.send('hello ' + req.params.name);
+//   next();
+// };
+//
+// const helloRoute = '/hello/:name';
+// server.get(helloRoute, respond);
+// server.head(helloRoute, respond);
+// server.listen(PORT, function() {
+//   console.log('%s listening at %s', server.name, server.url);
+// });
+//
+// // you are responsible for call next()
+// server.post('/foo',
+//   (req, res, next) => {
+//     req.someData = 'foo';
+//     console.info(`In the first handler: ${req.someData}`);
+//     return next();
+//   },
+//   (req, res, next) => {
+//     console.info(`In the second handler: ${req.someData}`);
+//     res.send(req.someData);
+//     return next();
+//   }
+// );
 
-const app = express();
+const io = socketio.listen(server.server);
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+server.get('/', function indexHTML(req, res, next) {
+  fs.readFile(__dirname + '/views/index.html', function (err, data) {
+    if (err) {
+      next(err);
+      return;
+    }
 
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/users', users);
-app.use('/vehicles', vehicles);
-
-
-app.get('/', (request, response) => {
-  response.statusCode = 200;
-  response.setHeader('Content-Type', 'text/plain');
-  response.end(`The time is ${Date.now()}`);
+    res.setHeader('Content-Type', 'text/html');
+    res.writeHead(200);
+    res.end(data);
+    next();
+  });
 });
 
-app.post('/', (request, response) => {
-  response.statusCode = 200;
-  response.setHeader('Content-Type', 'text/plain');
-  response.end(`POSTed at ${Date.now()}`);
+
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
 });
 
-app.delete('/', (request, response) => {
-  response.statusCode = 200;
-  response.setHeader('Content-Type', 'text/plain');
-  response.end(`DELETED at ${Date.now()}`);
-});
-
-const port = process.env.PORT || '8080';
-
-app.listen(port, () => {
-  console.log(`Our app is running ${port}`) ;
+server.listen(8080, function () {
+  console.log('socket.io server listening at %s', server.url);
 });
